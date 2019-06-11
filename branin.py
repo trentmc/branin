@@ -35,20 +35,23 @@ def arff_string(title, name, X, y):
     s += "%s\n" % npoints
     
     s += "% 6. Number of attributes: " 
-    s += "%s (all real)\n" % ndim
+    s += "%s\n" % ndim
+    s += "\n"
     
     s += "@relation %s\n" % name
+    s += "\n"
     
     for dim_i in range(ndim):
-        s += "@attribute 'x%s' real\n" % dim_i
+        s += "@attribute 'x%s' numeric\n" % dim_i
         
-    s += "@attribute 'y' real\n"
+    s += "@attribute 'y' numeric\n"
+    s += "\n"
         
+    s += "@data\n"
     for point_i in range(npoints):
-        s += "@data "
         for dim_i in range(ndim):
-            s += "%s," % X[point_i,dim_i]
-        s += "%s" % y[point_i]
+            s += "%0.4f," % X[point_i,dim_i]
+        s += "%0.4f" % y[point_i]
         s += "\n"
         
     return s
