@@ -2,6 +2,6 @@
 Create branin dataset in ARFF. Plot it too.
 
 Usage:
-'''shell
+```shell
 python branin.py
-'''
+```
