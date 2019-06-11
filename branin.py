@@ -47,7 +47,7 @@ def arff_string(title, name, X, y):
     for point_i in range(npoints):
         s += "@data "
         for dim_i in range(ndim):
-            s += "%s, " % X[point_i,dim_i]
+            s += "%s," % X[point_i,dim_i]
         s += "%s" % y[point_i]
         s += "\n"
         
