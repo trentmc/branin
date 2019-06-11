@@ -65,7 +65,7 @@ fig = plt.figure()
 ax = fig.gca(projection='3d')
 surf = ax.plot_surface(X0, X1, Z, cmap=cm.coolwarm,
                        linewidth=0, antialiased=False)
-#plt.show()
+plt.show()
 
 # Convert to 2d X and 1d y
 X = np.empty((X0.shape[0]*X0.shape[1],2))
