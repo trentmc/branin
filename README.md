@@ -1,2 +1,2 @@
 # branin
-Create branin dataset (and plot)
+Create branin dataset in ARFF. Plot it too.
