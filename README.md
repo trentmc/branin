@@ -5,3 +5,7 @@ Usage:
 ```shell
 python branin.py
 ```
+
+Plot:
+
+![Image of branin](branin.png)
