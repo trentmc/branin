@@ -109,20 +109,21 @@ def model_branin_2d():
     f.close()
 
     # Build model
-
     kernel = gaussian_process.kernels.RBF()
     model = gaussian_process.GaussianProcessRegressor(
         kernel=kernel, normalize_y=True, random_state=0)
     model.fit(X, y)
     print(f"score={model.score(X,y)}")
     yhat = model.predict(X, return_std=False)
+    Zhat = numpy.reshape(yhat, (npoints, npoints))
 
     # Plot model
     fig, ax = pyplot.subplots(subplot_kw={"projection": "3d"})
-    ax.plot_surface(X0, X1, Z, cmap=cm.coolwarm,
+    ax.plot_surface(X0, X1, Zhat, cmap=cm.coolwarm,
                     linewidth=0, antialiased=False)
     pyplot.title("Model")
     pyplot.show()
+    
 
 
 if __name__ == "__main__":
