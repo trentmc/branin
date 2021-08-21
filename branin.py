@@ -1,5 +1,7 @@
 from mpl_toolkits.mplot3d import Axes3D  
 
+import matplotlib
+matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 from matplotlib import cm
 import numpy as np
@@ -56,30 +58,31 @@ def arff_string(title, name, X, y):
         
     return s
 
-# Make data
-npoints = 15
-X0_vec = np.linspace(-5., 10., npoints)
-X1_vec = np.linspace(0., 15., npoints)
-X0, X1 = np.meshgrid(X0_vec, X1_vec)
-Z = branin_mesh(X0, X1)
+def main():
+    # Make data
+    npoints = 15
+    X0_vec = np.linspace(-5., 10., npoints)
+    X1_vec = np.linspace(0., 15., npoints)
+    X0, X1 = np.meshgrid(X0_vec, X1_vec)
+    Z = branin_mesh(X0, X1)
 
-# Plot the surface
-fig = plt.figure()
-ax = fig.gca(projection='3d')
-surf = ax.plot_surface(X0, X1, Z, cmap=cm.coolwarm,
-                       linewidth=0, antialiased=False)
-plt.show()
+    # Plot the surface
+    fig, ax = plt.subplots(subplot_kw={"projection": "3d"})
+    surf = ax.plot_surface(X0, X1, Z, cmap=cm.coolwarm,
+                           linewidth=0, antialiased=False)
+    plt.show()
 
-# Convert to 2d X and 1d y
-X = np.empty((X0.shape[0]*X0.shape[1],2))
-X[:,0] = np.ravel(X0)
-X[:,1] = np.ravel(X1)
-y = np.ravel(Z)
+    # Convert to 2d X and 1d y
+    X = np.empty((X0.shape[0]*X0.shape[1],2))
+    X[:,0] = np.ravel(X0)
+    X[:,1] = np.ravel(X1)
+    y = np.ravel(Z)
 
-# Output arff file
-s = arff_string("Branin Function", "branin", X, y)
-f = open("branin.arff", "w")
-f.write(s)
-f.close()
+    # Output arff file
+    s = arff_string("Branin Function", "branin", X, y)
+    f = open("branin.arff", "w")
+    f.write(s)
+    f.close()
 
-###
+if __name__ == "__main__":
+    main()
