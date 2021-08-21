@@ -67,11 +67,8 @@ def model_sin_1d():
     y = numpy.sin(xvec)
 
     # build model
-    kernel = gaussian_process.kernels.RBF()
-    model = gaussian_process.GaussianProcessRegressor(
-        kernel=kernel, normalize_y=True, random_state=0)
+    model = gaussian_process.GaussianProcessRegressor()
     model.fit(X, y)
-    print(f"score={model.score(X,y)}")
     yhat = model.predict(X, return_std=False)
     
     # plot
@@ -82,49 +79,46 @@ def model_sin_1d():
     pyplot.show()
 
 def model_branin_2d():
-    # Make data
+    # create data
     npoints = 15
     X0_vec = numpy.linspace(-5., 10., npoints)
     X1_vec = numpy.linspace(0., 15., npoints)
     X0, X1 = numpy.meshgrid(X0_vec, X1_vec)
     Z = branin_mesh(X0, X1)
 
-    # Shape data for modeling
+    # shape data for modeling
     X = numpy.empty((X0.shape[0]*X0.shape[1],2))
     X[:,0] = numpy.ravel(X0)
     X[:,1] = numpy.ravel(X1)
     y = numpy.ravel(Z)
 
-    # Surface plot
-    fig, ax = pyplot.subplots(subplot_kw={"projection": "3d"})
-    ax.plot_surface(X0, X1, Z, cmap=cm.coolwarm,
-                    linewidth=0, antialiased=False)
-    pyplot.title("Data")
-    pyplot.show()
+    # surface plot - just data
+    if False:
+        fig, ax = pyplot.subplots(subplot_kw={"projection": "3d"})
+        ax.plot_surface(X0, X1, Z, cmap=cm.coolwarm,
+                        linewidth=0, antialiased=False)
+        pyplot.title("Data")
+        pyplot.show()
 
-    # Output arff file
+    # output arff file
     s = arff_string("Branin Function", "branin", X, y)
     f = open("branin.arff", "w")
     f.write(s)
     f.close()
 
-    # Build model
-    kernel = gaussian_process.kernels.RBF()
-    model = gaussian_process.GaussianProcessRegressor(
-        kernel=kernel, normalize_y=True, random_state=0)
+    # build model
+    model = gaussian_process.GaussianProcessRegressor()
     model.fit(X, y)
-    print(f"score={model.score(X,y)}")
     yhat = model.predict(X, return_std=False)
     Zhat = numpy.reshape(yhat, (npoints, npoints))
 
-    # Plot model
+    # plot data + model
     fig, ax = pyplot.subplots(subplot_kw={"projection": "3d"})
-    ax.plot_surface(X0, X1, Zhat, cmap=cm.coolwarm,
-                    linewidth=0, antialiased=False)
-    pyplot.title("Model")
+    ax.plot_wireframe(X0, X1, Z, linewidth=1)
+    ax.scatter(X0, X1, Zhat, c="r", label="model")
+    pyplot.title("Data + model")
     pyplot.show()
     
-
 
 if __name__ == "__main__":
     model_branin_2d()
