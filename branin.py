@@ -70,7 +70,7 @@ def main():
     fig, ax = plt.subplots(subplot_kw={"projection": "3d"})
     surf = ax.plot_surface(X0, X1, Z, cmap=cm.coolwarm,
                            linewidth=0, antialiased=False)
-    plt.show()
+    #plt.show() #HACK
 
     # Convert to 2d X and 1d y
     X = np.empty((X0.shape[0]*X0.shape[1],2))
@@ -83,6 +83,18 @@ def main():
     f = open("branin.arff", "w")
     f.write(s)
     f.close()
+
+    # Build Gaussian Process model, plot its surface
+    import pdb; pdb.set_trace()
+    from sklearn.gaussian_process import GaussianProcessRegressor
+    from sklearn.gaussian_process.kernels import DotProduct, WhiteKernel
+    kernel = DotProduct() + WhiteKernel()
+    gpr = GaussianProcessRegressor(kernel=kernel, random_state=0)
+    gpr.fit(X, y)
+    s = gpr.score(X,y)
+    yhat = gpr.predict(X, return_std=False)
+    import pdb; pdb.set_trace()
+    
 
 if __name__ == "__main__":
     main()
