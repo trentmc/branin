@@ -11,12 +11,18 @@ Create branin dataset in ARFF. Plot it too.
 git clone git clone https://github.com/trentmc/branin.git
 cd branin
 
+#install non-virtualenv dependencies
+sudo apt-get install python3-tk
+
 #set up virtualenv
 python -m venv venv
 source venv/bin/activate
 
-#install dependencies
-pip install --upgrade matplotlib
+#install virtualenv dependencies
+pip install wheel
+pip install tkinter
+pip install matplotlib
+pip install sklearn
 ```
 
 ### Usage
