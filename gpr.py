@@ -71,6 +71,9 @@ def run_gpr(local=False):
         return
 
     with open(filename) as datafile:
+        datafile.seek(0)
+        print(datafile.read())
+        datafile.seek(0)
         res = arff.load(datafile)
 
     print("Stacking data.")
