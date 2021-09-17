@@ -25,10 +25,13 @@ def get_input(local=False):
         print("No DIDs found in environment. Aborting.")
         return
 
+    print(f"dids: {dids}")
+    print(os.listdir('data/ddos'))
+    print(os.listdir('/data/ddos'))
     dids = json.loads(dids)
 
     for did in dids:
-        filename = '/data/ddos/' + did
+        filename = f'/data/ddos/{did}/0'
         print(f"Reading asset file {filename}.")
 
         return filename
