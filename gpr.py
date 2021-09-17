@@ -1,62 +1,72 @@
+import json
+import os
+import sys
+
+import arff
 import matplotlib
 matplotlib.use('agg')
 from matplotlib import cm, pyplot
 import numpy
 from sklearn import gaussian_process
-import io
-import arff
-import os
-import json
+
+from branin_mesh import create_mesh
 
 
-def branin_mesh(X0, X1):
-    # b,c,t = 5.1/(4.*(pi)**2), 5./pi, 1./(8.*pi)
-    b, c, t = 0.12918450914398066, 1.5915494309189535, 0.039788735772973836
-    u = X1 - b*X0**2 + c*X0 - 6
-    r = 10.*(1. - t) * numpy.cos(X0) + 10
-    Z = u**2 + r
-    return Z
+def get_input(local=False):
+    if local:
+        print("Reading local file branin.arff.")
 
-
-def run_gpr():
-    npoints = 15
-    X0_vec = numpy.linspace(-5., 10., npoints)
-    X1_vec = numpy.linspace(0., 15., npoints)
-    X0, X1 = numpy.meshgrid(X0_vec, X1_vec)
-    Z = branin_mesh(X0, X1)
+        return 'branin.arff'
 
     dids = json.loads(os.getenv('DIDS', None))
 
     if not dids:
-        print("no dids")
+        print("No DIDs found in environment. Aborting.")
         return
 
     for did in dids:
-        # get the ddo from disk
         filename = '/data/ddos/' + did
-        with open(filename) as datafile:
-            res = arff.load(datafile)
+        print(f"Reading asset file {filename}.")
 
-    mat = numpy.stack(res["data"])
-    [X, y] = numpy.split(mat, [2], axis=1)
+        return filename
 
-    model = gaussian_process.GaussianProcessRegressor()
-    model.fit(X, y)
-    yhat = model.predict(X, return_std=False)
-    Zhat = numpy.reshape(yhat, (npoints, npoints))
 
+def plot(Zhat, npoints):
+    X0, X1, Z = create_mesh(npoints)
     # plot data + model
     fig, ax = pyplot.subplots(subplot_kw={"projection": "3d"})
     ax.plot_wireframe(X0, X1, Z, linewidth=1)
     ax.scatter(X0, X1, Zhat, c="r", label="model")
     pyplot.title("Data + model")
+    pyplot.show()
 
-    buf = io.BytesIO()
-    pyplot.savefig(buf, format='png')
-    buf.seek(0)
-    print(buf.read())
-    buf.close()
+
+def run_gpr(local=False):
+    npoints = 15
+
+    filename = get_input(local)
+    if not filename:
+        print("Could not retrieve filename.")
+        return
+
+    with open(filename) as datafile:
+        res = arff.load(datafile)
+
+    print("Stacking data.")
+    mat = numpy.stack(res["data"])
+    [X, y] = numpy.split(mat, [2], axis=1)
+
+    print("Applying Gaussian processing.")
+    model = gaussian_process.GaussianProcessRegressor()
+    model.fit(X, y)
+    yhat = model.predict(X, return_std=False)
+    Zhat = numpy.reshape(yhat, (npoints, npoints))
+
+    if local:
+        print("Plotting results")
+        plot(Zhat, npoints)
 
 
 if __name__ == "__main__":
-    run_gpr()
+    local = (len(sys.argv) == 2 and sys.argv[1] == "local")
+    run_gpr(local)
