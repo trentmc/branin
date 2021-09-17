@@ -6,7 +6,7 @@ from mpl_toolkits.mplot3d import Axes3D
 import numpy
 from sklearn import gaussian_process
 
-from branin_mesh import create_mesh
+from gpr import create_mesh
 
 
 def arff_string(title, name, X, y):
