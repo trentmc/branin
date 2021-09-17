@@ -36,36 +36,19 @@ def get_input(local=False):
 
         return 'branin.arff'
 
-    print(get_job_details())
+    dids = os.getenv('DIDS', None)
 
+    if not dids:
+        print("No DIDs found in environment. Aborting.")
+        return
 
-def get_job_details():
-    """Reads in metadata information about assets used by the algo"""
-    job = dict()
-    job['dids'] = json.loads(os.getenv('DIDS', None))
-    job['metadata'] = dict()
-    job['files'] = dict()
-    job['algo'] = dict()
-    job['secret'] = os.getenv('secret', None)
+    dids = json.loads(dids)
 
-    if job['dids'] is not None:
-        for did in job['dids']:
-            # get the ddo from disk
-            filename = '/data/ddos/' + did
-            with open(filename) as json_file:
-                ddo = json.load(json_file)
-                print(ddo)
-                # search for metadata service
-                #for service in ddo['services']:
-                #    if service['type'] == 'metadata':
-                #        job['files'][did] = list()
-                #        index = 0
-                #        for file in service['attributes']['main']['files']:
-                #            job['files'][did].append(
-                #                '/data/inputs/' + did + '/' + str(index)
-                #            )
-                #            index = index + 1
-    return ""
+    for did in dids:
+        filename = f'data/ddos/{did}'
+        print(f"Reading asset file {filename}.")
+
+        return filename
 
 
 def plot(Zhat, npoints):
@@ -87,6 +70,9 @@ def run_gpr(local=False):
         return
 
     with open(filename) as datafile:
+        datafile.seek(0)
+        print(datafile.read())
+        datafile.seek(0)
         res = arff.load(datafile)
 
     print("Stacking data.")
