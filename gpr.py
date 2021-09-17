@@ -44,12 +44,8 @@ def get_input(local=False):
 
     dids = json.loads(dids)
 
-    print(f"dids: {dids}")
-    print(f"contents of ddos file: {os.listdir('data/ddos')}")
-    print(f"contents of inputs file: {os.listdir('data/inputs')}")
-
     for did in dids:
-        filename = f'data/ddos/{did}'
+        filename = f'data/inputs/{did}/0'  # 0 for metadata service
         print(f"Reading asset file {filename}.")
 
         return filename
