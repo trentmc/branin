@@ -55,7 +55,7 @@ def get_job_details():
             with open(filename) as json_file:
                 ddo = json.load(json_file)
                 # search for metadata service
-                for service in ddo['service']:
+                for service in ddo['services']:
                     if service['type'] == 'metadata':
                         job['files'][did] = list()
                         index = 0
