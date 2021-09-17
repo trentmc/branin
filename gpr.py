@@ -1,5 +1,6 @@
 import json
 import os
+import pickle
 import sys
 
 import arff
@@ -18,11 +19,13 @@ def get_input(local=False):
 
         return 'branin.arff'
 
-    dids = json.loads(os.getenv('DIDS', None))
+    dids = os.getenv('DIDS', None)
 
     if not dids:
         print("No DIDs found in environment. Aborting.")
         return
+
+    dids = json.loads(dids)
 
     for did in dids:
         filename = '/data/ddos/' + did
@@ -65,6 +68,11 @@ def run_gpr(local=False):
     if local:
         print("Plotting results")
         plot(Zhat, npoints)
+
+    filename = 'gpr.pickle' if local else "/data/outputs/result"
+    with open(filename, 'wb') as pickle_file:
+        print(f"Pickling results in {filename}")
+        pickle.dump(Zhat, pickle_file)
 
 
 if __name__ == "__main__":
