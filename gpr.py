@@ -54,17 +54,18 @@ def get_job_details():
             filename = '/data/ddos/' + did
             with open(filename) as json_file:
                 ddo = json.load(json_file)
+                print(ddo)
                 # search for metadata service
-                for service in ddo['services']:
-                    if service['type'] == 'metadata':
-                        job['files'][did] = list()
-                        index = 0
-                        for file in service['attributes']['main']['files']:
-                            job['files'][did].append(
-                                '/data/inputs/' + did + '/' + str(index)
-                            )
-                            index = index + 1
-    return job
+                #for service in ddo['services']:
+                #    if service['type'] == 'metadata':
+                #        job['files'][did] = list()
+                #        index = 0
+                #        for file in service['attributes']['main']['files']:
+                #            job['files'][did].append(
+                #                '/data/inputs/' + did + '/' + str(index)
+                #            )
+                #            index = index + 1
+    return ""
 
 
 def plot(Zhat, npoints):
