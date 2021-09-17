@@ -20,9 +20,7 @@ source venv/bin/activate
 
 #install virtualenv dependencies
 pip install wheel
-pip install tkinter
-pip install matplotlib
-pip install sklearn
+pip install -r requirements.txt
 ```
 
 ### Usage
