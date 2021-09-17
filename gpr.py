@@ -5,6 +5,8 @@ import numpy
 from sklearn import gaussian_process
 import io
 import arff
+import os
+import json
 
 
 def branin_mesh(X0, X1):
@@ -23,8 +25,17 @@ def run_gpr():
     X0, X1 = numpy.meshgrid(X0_vec, X1_vec)
     Z = branin_mesh(X0, X1)
 
-    with open('branin.arff', 'r') as datafile:
-        res = arff.load(datafile)
+    dids = json.loads(os.getenv('DIDS', None))
+
+    if not dids:
+        print("no dids")
+        return
+
+    for did in dids:
+        # get the ddo from disk
+        filename = '/data/ddos/' + did
+        with open(filename) as datafile:
+            res = arff.load(datafile)
 
     mat = numpy.stack(res["data"])
     [X, y] = numpy.split(mat, [2], axis=1)
